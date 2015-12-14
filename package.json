@@ -1,0 +1,23 @@
+{
+  "name": "express-request-log",
+  "version": "0.0.1",
+  "description": "express simple requests logging middleware",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skarbovskiy/express-request-log.git"
+  },
+  "keywords": [
+    "express",
+    "logging"
+  ],
+  "author": "george.skarbovskiy@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/skarbovskiy/express-request-log/issues"
+  },
+  "homepage": "https://github.com/skarbovskiy/express-request-log#readme"
+}
