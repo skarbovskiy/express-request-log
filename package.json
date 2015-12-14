@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/skarbovskiy/express-request-log/issues"
   },
-  "homepage": "https://github.com/skarbovskiy/express-request-log#readme"
+  "homepage": "https://github.com/skarbovskiy/express-request-log#readme",
+  "dependencies": {
+    "lodash": "^3.10.1"
+  }
 }
