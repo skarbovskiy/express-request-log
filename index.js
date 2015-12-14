@@ -1,5 +1,4 @@
 'use strict';
-var _ = require('lodash');
 
 module.exports = function createMiddleware (logger, options) {
 	options = options || {};
@@ -19,7 +18,7 @@ module.exports = function createMiddleware (logger, options) {
 			send.apply(res, args);
 
 			var logEntry = {
-				requestIps: _.union(req.ips, [req.ip]),
+				requestIps: req.ips.concat([req.ip]),
 				requestPath: req.originalUrl,
 				requestMethod: req.method,
 				responseStatus: res.statusCode,
