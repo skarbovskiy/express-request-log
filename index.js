@@ -10,12 +10,12 @@ module.exports = function createMiddleware (logger, options) {
 	}
 
 	return function loggingMiddleware (req, res, next) {
-		var send = res.send;
+		var end = res.end;
 		var startTime = Date.now();
-		res.send = function proxySend (body) {
+		res.end = function proxyEnd (body) {
 			var endTime = Date.now();
 			var args = Array.prototype.slice.apply(arguments);
-			send.apply(res, args);
+			end.apply(res, args);
 
 			var logEntry = {
 				requestIps: req.ips.concat([req.ip]),
@@ -31,7 +31,7 @@ module.exports = function createMiddleware (logger, options) {
 				logEntry.requestBody = typeof(req.body) === 'object' ? JSON.stringify(req.body) : req.body;
 			}
 			if (options.response) {
-				logEntry.responseBody = typeof(body) === 'object' ? JSON.stringify(body) : body;
+				logEntry.responseBody = body ? body.toString() : null;
 			}
 			logger.info('request', logEntry);
 		}
