@@ -25,10 +25,10 @@ module.exports = function createMiddleware (logger, options) {
 				responseDuration: endTime - startTime
 			};
 			if (options.headers) {
-				logEntry.requestHeaders = JSON.stringify(req.headers);
+				logEntry.requestHeaders = req.headers;
 			}
 			if (options.request) {
-				logEntry.requestBody = typeof(req.body) === 'object' ? JSON.stringify(req.body) : req.body;
+				logEntry.requestBody = req.body;
 			}
 			if (options.response) {
 				logEntry.responseBody = body ? body.toString() : null;
