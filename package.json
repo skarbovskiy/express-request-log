@@ -1,6 +1,6 @@
 {
   "name": "express-request-log",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "express simple requests logging middleware",
   "main": "index.js",
   "scripts": {
