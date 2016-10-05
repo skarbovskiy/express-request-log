@@ -18,7 +18,7 @@ module.exports = function createMiddleware (logger, options) {
 			end.apply(res, args);
 
 			var logEntry = {
-				time: startTime.toISOString(),
+				time: (new Date(startTime)).toISOString(),
 				requestIps: req.ips.concat([req.ip]),
 				requestPath: req.originalUrl,
 				requestMethod: req.method,
