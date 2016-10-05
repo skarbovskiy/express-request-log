@@ -18,21 +18,26 @@ module.exports = function createMiddleware (logger, options) {
 			end.apply(res, args);
 
 			var logEntry = {
+				time: startTime.toISOString(),
 				requestIps: req.ips.concat([req.ip]),
 				requestPath: req.originalUrl,
 				requestMethod: req.method,
 				responseStatus: res.statusCode,
 				responseDuration: endTime - startTime
 			};
+
 			if (options.headers) {
 				logEntry.requestHeaders = req.headers;
 			}
+
 			if (options.request) {
 				logEntry.requestBody = req.body;
 			}
+
 			if (options.response) {
 				logEntry.responseBody = body ? body.toString() : null;
 			}
+
 			logger.info('request', logEntry);
 		}
 		next();
