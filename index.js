@@ -1,10 +1,12 @@
 'use strict';
+const get = require('lodash.get');
 
 module.exports = function createMiddleware (logger, options) {
 	options = options || {};
 	options.headers = !!(options.headers || false);
 	options.request = !!(options.request || false);
 	options.response = !!(options.response || false);
+	options.mixins = options.mixins || [];
 	if (!logger || !logger.info) {
 		throw new Error('compatable logger not provided');
 	}
@@ -26,6 +28,14 @@ module.exports = function createMiddleware (logger, options) {
 				responseStatus: res.statusCode,
 				responseDuration: endTime - startTime
 			};
+
+			if (options.mixins && options.mixins.length) {
+				var additionalData = {};
+				options.mixins.forEach(function (mixin) {
+					additionalData[mixin] = get(req, mixin);
+				});
+				logEntry.additionalData = JSON.stringify(additionalData);
+			}
 
 			if (options.headers) {
 				logEntry.requestHeaders = req.headers;

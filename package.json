@@ -1,6 +1,6 @@
 {
   "name": "express-request-log",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "express simple requests logging middleware",
   "main": "index.js",
   "scripts": {
@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/skarbovskiy/express-request-log/issues"
   },
-  "homepage": "https://github.com/skarbovskiy/express-request-log#readme"
+  "homepage": "https://github.com/skarbovskiy/express-request-log#readme",
+  "dependencies": {
+    "lodash.get": "^4.4.2"
+  }
 }
