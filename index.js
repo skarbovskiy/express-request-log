@@ -1,5 +1,6 @@
 'use strict';
 const get = require('lodash.get');
+const uuid = require('uuid/v4');
 
 module.exports = function createMiddleware (logger, options) {
 	options = options || {};
@@ -14,6 +15,7 @@ module.exports = function createMiddleware (logger, options) {
 	return function loggingMiddleware (req, res, next) {
 		var end = res.end;
 		var startTime = Date.now();
+		req.uuid = uuid();
 		res.end = function proxyEnd (body) {
 			var endTime = Date.now();
 			var args = Array.prototype.slice.apply(arguments);
@@ -21,6 +23,7 @@ module.exports = function createMiddleware (logger, options) {
 
 			var logEntry = {
 				time: (new Date(startTime)).toISOString(),
+				uuid: req.uuid,
 				requestIps: req.ips.concat([req.ip]),
 				requestHostname: req.hostname,
 				requestPath: req.originalUrl,
@@ -38,15 +41,11 @@ module.exports = function createMiddleware (logger, options) {
 			}
 
 			if (options.headers) {
-				logEntry.requestHeaders = req.headers;
+				logEntry.requestHeaders = JSON.stringify(req.headers);
 			}
 
 			if (options.request) {
-				logEntry.requestBody = req.body;
-			}
-
-			if (options.response) {
-				logEntry.responseBody = body ? body.toString() : null;
+				logEntry.requestBody = JSON.stringify(req.body);
 			}
 
 			logger.info('request', logEntry);
