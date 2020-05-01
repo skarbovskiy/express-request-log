@@ -1,6 +1,6 @@
 'use strict';
 const get = require('lodash.get');
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 
 module.exports = function createMiddleware (logger, options) {
 	options = options || {};
