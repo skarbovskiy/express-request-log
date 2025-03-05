@@ -1,12 +1,12 @@
 'use strict';
 const get = require('lodash.get');
-const { v4: uuid } = require('uuid');
 
 module.exports = function createMiddleware (logger, options) {
 	options = options || {};
 	options.headers = !!(options.headers || false);
 	options.request = !!(options.request || false);
 	options.response = !!(options.response || false);
+	options.maxBodyLength = (options.maxBodyLength || null);
 	options.mixins = options.mixins || [];
 	if (!logger || !logger.info) {
 		throw new Error('compatable logger not provided');
@@ -14,17 +14,19 @@ module.exports = function createMiddleware (logger, options) {
 
 	return function loggingMiddleware (req, res, next) {
 		var end = res.end;
+		var json = res.json;
 		var startTime = Date.now();
-		req.uuid = uuid();
-		res.end = function proxyEnd (body) {
+		res.json = function (bodyJson) {
+			res._bodyJson = bodyJson;
+			json.apply(res, arguments);
+		};
+		res.end = function proxyEnd () {
 			var endTime = Date.now();
-			var args = Array.prototype.slice.apply(arguments);
-			end.apply(res, args);
+			end.apply(res, arguments);
 
 			var logEntry = {
-				time: (new Date(startTime)).toISOString(),
-				uuid: req.uuid,
-				requestIps: req.ips.concat([req.ip]),
+				requestTime: (new Date(startTime)).toISOString(),
+				requestIps: JSON.stringify(req.ips.concat([req.ip])),
 				requestHostname: req.hostname,
 				requestPath: req.originalUrl,
 				requestMethod: req.method,
@@ -46,6 +48,16 @@ module.exports = function createMiddleware (logger, options) {
 
 			if (options.request) {
 				logEntry.requestBody = JSON.stringify(req.body);
+				if (options.maxBodyLength && logEntry.requestBody.length > options.maxBodyLength) {
+					logEntry.requestBody = logEntry.requestBody.substring(0, options.maxBodyLength) + '...';
+				}
+			}
+
+			if (options.response && res._bodyJson) {
+				logEntry.responseBody = JSON.stringify(res._bodyJson);
+				if (options.maxBodyLength && logEntry.responseBody.length > options.maxBodyLength) {
+					logEntry.responseBody = logEntry.responseBody.substring(0, options.maxBodyLength) + '...';
+				}
 			}
 
 			logger.info('request', logEntry);
