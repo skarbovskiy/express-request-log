@@ -18,7 +18,7 @@ module.exports = function createMiddleware (logger, options) {
 		var startTime = Date.now();
 		res.json = function (bodyJson) {
 			res._bodyJson = bodyJson;
-			json.apply(res, arguments);
+			return json.apply(res, arguments);
 		};
 		res.end = function proxyEnd () {
 			var endTime = Date.now();
